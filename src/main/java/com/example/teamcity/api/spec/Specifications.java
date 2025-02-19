@@ -30,9 +30,6 @@ public class Specifications {
         return reqBuilder()
                 .setAuth(basicAuthScheme)
                 .build();
-//        return reqBuilder()
-//                .setBaseUri("http://%s:%s@%s/httpAuth".formatted("", Config.getProperty("superUserToken"), Config.getProperty("host")))
-//                .build();
     }
 
     public static RequestSpecification unauthSpec() {
