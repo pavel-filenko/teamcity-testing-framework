@@ -23,22 +23,16 @@ public class BuildTypeTest extends BaseApiTest {
             groups = {"Positive", "CRUD"}
     )
     public void userCreatesBuildTypeTest() {
-        var user = generate(User.class);
+        superUserCheckRequests.getRequest(USERS).create(testData.getUser());
+        var userCheckRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
-        superUserCheckRequests.getRequest(USERS).create(user);
-        var userCheckRequests = new CheckedRequests(Specifications.authSpec(user));
+        userCheckRequests.<Project>getRequest(PROJECT).create(testData.getProject());
 
-        var project = generate(Project.class);
+        userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        project = userCheckRequests.<Project>getRequest(PROJECT).create(project);
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
 
-        var buildType = generate(Arrays.asList(project), BuildType.class);
-
-        userCheckRequests.getRequest(BUILD_TYPES).create(buildType);
-
-        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(buildType.getId());
-
-        softy.assertEquals(buildType.getName(), createdBuildType.getName(), "Created build type name should be equal to expected");
+        softy.assertEquals(testData.getBuildType().getName(), createdBuildType.getName(), "Created build type name should be equal to expected");
     }
 
     @Test(
@@ -46,27 +40,22 @@ public class BuildTypeTest extends BaseApiTest {
             groups = {"Negative", "CRUD"}
     )
     public void userCreatesTwoBuildTypesWithTheSameIdTest() {
-        var user = generate(User.class);
+        var buildTypeWithSameId = generate(Arrays.asList(testData.getProject()), BuildType.class, testData.getBuildType().getId());
 
-        superUserCheckRequests.getRequest(USERS).create(user);
-        var userCheckRequests = new CheckedRequests(Specifications.authSpec(user));
+        superUserCheckRequests.getRequest(USERS).create(testData.getUser());
+        var userCheckRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
-        var project = generate(Project.class);
+        userCheckRequests.<Project>getRequest(PROJECT).create(testData.getProject());
 
-        project = userCheckRequests.<Project>getRequest(PROJECT).create(project);
+        userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        var buildType1 = generate(Arrays.asList(project), BuildType.class);
-        var buildType2 = generate(Arrays.asList(project), BuildType.class, buildType1.getId());
-
-        userCheckRequests.getRequest(BUILD_TYPES).create(buildType1);
-
-        new UncheckedBase(Specifications.authSpec(user), BUILD_TYPES)
-                .create(buildType2)
+        new UncheckedBase(Specifications.authSpec(testData.getUser()), BUILD_TYPES)
+                .create(buildTypeWithSameId)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
                 .body(Matchers.containsString(
                         "The build configuration / template ID \"%s\" is already used by another configuration or template"
-                                .formatted(buildType1.getId())
+                                .formatted(testData.getBuildType().getId())
                 ));
     }
 
