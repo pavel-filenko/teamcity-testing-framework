@@ -20,6 +20,7 @@
         <allure.maven.version>2.15.2</allure.maven.version>
         <allure.java.commons.version>2.29.1</allure.java.commons.version>
         <jackson.version>2.18.2</jackson.version>
+        <wiremock.version>3.9.1</wiremock.version>
     </properties>
 
     <dependencies>
@@ -73,6 +74,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
