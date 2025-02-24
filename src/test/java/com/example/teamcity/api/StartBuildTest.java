@@ -1,7 +1,7 @@
 package com.example.teamcity.api;
 
 import com.example.teamcity.api.models.Build;
-import com.example.teamcity.api.requests.checked.CheckedBase;
+import com.example.teamcity.api.requests.CheckedRequests;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.common.WireMock;
 import io.qameta.allure.Feature;
@@ -10,8 +10,8 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.example.teamcity.api.enums.Endpoint.BUILD_QUEUE;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 
 @Feature("Start build")
 public class StartBuildTest extends BaseApiTest {
@@ -26,18 +26,17 @@ public class StartBuildTest extends BaseApiTest {
         WireMock.setupServer(post(BUILD_QUEUE.getUrl()), HttpStatus.SC_OK, fakeBuild);
     }
 
-    @Test(description = "User should be able to start build (with WireMock)", groups = {"Regression"})
+    @Test(description = "User should be able to start build (with WireMock)",
+            groups = {"Regression"})
     public void userStartsBuildWithWireMockTest() {
-        var checkedBuildQueueRequest = new CheckedBase<Build>(Specifications.mockSpec(), BUILD_QUEUE);
+        var checkedBuildQueueRequest = new CheckedRequests(Specifications.mockSpec());
 
-        var build = checkedBuildQueueRequest.create(Build.builder()
+        var build = checkedBuildQueueRequest.<Build>getRequest(BUILD_QUEUE).create(Build.builder()
                 .buildType(testData.getBuildType())
                 .build());
 
-        System.out.println(build);
-
-//        softy.assertThat(build.getState()).as("buildState").isEqualTo("finished");
-//        softy.assertThat(build.getStatus()).as("buildStatus").isEqualTo("SUCCESS");
+        softy.assertEquals(build.getState(), "finished");
+        softy.assertEquals(build.getStatus(), "SUCCESS");
     }
 
     @AfterMethod(alwaysRun = true)
