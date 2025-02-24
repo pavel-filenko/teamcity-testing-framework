@@ -11,10 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Step extends BaseModel {
-    private String id;
+public class Property{
     private String name;
-    @Builder.Default
-    private String type = "simpleRunner";
-    private Properties properties;
+    private String value;
 }
