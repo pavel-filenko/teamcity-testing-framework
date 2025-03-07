@@ -3,10 +3,9 @@ package com.example.teamcity.api;
 import com.example.teamcity.api.generators.RoleGenerator;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
-import com.example.teamcity.api.models.Role;
 import com.example.teamcity.api.models.User;
-import com.example.teamcity.api.requests.CheckedRequests;
-import com.example.teamcity.api.requests.UncheckedRequests;
+import com.example.teamcity.api.requests.base.CheckedRequests;
+import com.example.teamcity.api.requests.base.UncheckedRequests;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.api.spec.ValidationResponseSpecifications;
 import org.testng.annotations.Test;
@@ -32,7 +31,7 @@ public class BuildTypeTest extends BaseApiTest {
 
         var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
 
-        softy.assertEquals(testData.getBuildType().getName(), createdBuildType.getName(), "Created build type name should be equal to expected");
+        softy.assertThat(testData.getBuildType().getName()).isEqualTo(createdBuildType.getName());
     }
 
     @Test(
@@ -71,7 +70,10 @@ public class BuildTypeTest extends BaseApiTest {
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
         var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
-        softy.assertEquals(createdBuildType.getProject(), testData.getBuildType().getProject());
+        softy.assertThat(createdBuildType)
+                .usingRecursiveComparison()
+                .ignoringFields("steps.count", "steps.step.id")
+                .isEqualTo(testData.getBuildType());
     }
 
     @Test(

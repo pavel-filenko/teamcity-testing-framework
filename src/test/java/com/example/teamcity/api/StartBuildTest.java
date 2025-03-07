@@ -4,8 +4,9 @@ import com.example.teamcity.api.generators.PropertiesGenerator;
 import com.example.teamcity.api.models.Build;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
-import com.example.teamcity.api.requests.CheckedRequests;
+import com.example.teamcity.api.requests.base.CheckedRequests;
 import com.example.teamcity.api.spec.Specifications;
+import com.example.teamcity.common.BuildInfo;
 import com.example.teamcity.common.WireMock;
 import io.qameta.allure.Feature;
 import org.apache.http.HttpStatus;
@@ -23,8 +24,8 @@ public class StartBuildTest extends BaseApiTest {
     @BeforeMethod
     public void setupWireMockServer() {
         var fakeBuild = Build.builder()
-                .state("finished")
-                .status("SUCCESS")
+                .state(BuildInfo.BUILD_STATE_FINISHED)
+                .status(BuildInfo.BUILD_STATUS_SUCCESS)
                 .build();
 
         WireMock.setupServer(post(BUILD_QUEUE.getUrl()), HttpStatus.SC_OK, fakeBuild);
@@ -34,13 +35,18 @@ public class StartBuildTest extends BaseApiTest {
             groups = {"Regression"})
     public void userStartsBuildWithWireMockTest() {
         var checkedBuildQueueRequest = new CheckedRequests(Specifications.mockSpec());
-
-        var build = checkedBuildQueueRequest.<Build>getRequest(BUILD_QUEUE).create(Build.builder()
+        var build = Build.builder()
                 .buildType(testData.getBuildType())
-                .build());
+                .status(BuildInfo.BUILD_STATUS_SUCCESS)
+                .state(BuildInfo.BUILD_STATE_FINISHED)
+                .build();
 
-        softy.assertEquals(build.getState(), "finished");
-        softy.assertEquals(build.getStatus(), "SUCCESS");
+        var createdBuild = checkedBuildQueueRequest.<Build>getRequest(BUILD_QUEUE).create(build);
+
+        softy.assertThat(createdBuild)
+                .usingRecursiveComparison()
+                .ignoringFields("buildType")
+                .isEqualTo(build);
     }
 
     @Test(
@@ -55,6 +61,11 @@ public class StartBuildTest extends BaseApiTest {
                 .getStep()
                 .getFirst()
                 .setProperties(PropertiesGenerator.generatePropertiesWithEcho());
+        var build = Build.builder()
+                .status(BuildInfo.BUILD_STATUS_SUCCESS)
+                .state(BuildInfo.BUILD_STATE_FINISHED)
+                .buildTypeId(testData.getBuildType().getId())
+                .build();
 
         userCheckRequests.<Project>getRequest(PROJECT).create(testData.getProject());
         userCheckRequests.<BuildType>getRequest(BUILD_TYPES).create(testData.getBuildType());
@@ -64,17 +75,16 @@ public class StartBuildTest extends BaseApiTest {
 
         var userMockedRequests = new CheckedRequests(Specifications.mockSpec());
 
-        var build = userMockedRequests.<Build>getRequest(BUILD_QUEUE).create(Build.builder()
-                .buildTypeId(testData.getBuildType().getId())
-                .build());
+        var createdBuild = userMockedRequests.<Build>getRequest(BUILD_QUEUE).create(build);
 
-        softy.assertEquals(build.getState(), "finished");
-        softy.assertEquals(build.getStatus(), "SUCCESS");
+        softy.assertThat(createdBuild)
+                .usingRecursiveComparison()
+                .ignoringFields("buildType", "id", "buildTypeId")
+                .isEqualTo(build);
     }
 
     @AfterMethod(alwaysRun = true)
     public void stopWireMockServer() {
         WireMock.stopServer();
     }
-
 }
