@@ -9,24 +9,16 @@
 @buildTypeId = builtType1
 ### Get all projects
 # @no-cookie-jar
-GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/projects
+GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:29/roles
 Content-Type: application/json
 Accept: application/json
 
 ### Step 1: create project
 # @no-cookie-jar
-POST http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/projects
+POST http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:29/roles/PROJECT_ADMIN/p:TestSnRHtWNiNv
 Content-Type: application/json
 Accept: application/json
 
-{
-  "parentProject": {
-    "locator": "_Root"
-  },
-  "name": "{{projectId}}",
-  "id": "{{projectId}}",
-  "copyAllAssociatedSettings": true
-}
 
 ### Step 2: create build type
 # @no-cookie-jar
