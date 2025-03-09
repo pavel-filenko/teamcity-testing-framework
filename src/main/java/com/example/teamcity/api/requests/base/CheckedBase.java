@@ -1,19 +1,21 @@
-package com.example.teamcity.api.requests.checked;
+package com.example.teamcity.api.requests.base;
 
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.generators.TestDataStorage;
 import com.example.teamcity.api.models.BaseModel;
+import com.example.teamcity.api.models.Role;
+import com.example.teamcity.api.models.Roles;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
-import com.example.teamcity.api.requests.unchecked.UncheckedBase;
+import com.example.teamcity.api.requests.UserRolesInterface;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
 @SuppressWarnings("unchecked")
-public final class CheckedBase<T extends BaseModel> extends Request implements CrudInterface {
+public final class CheckedBase<T extends BaseModel> extends Request implements CrudInterface, UserRolesInterface {
     private final UncheckedBase uncheckedBase;
 
-    public CheckedBase(RequestSpecification spec, Endpoint endpoint) {
+    CheckedBase(RequestSpecification spec, Endpoint endpoint) {
         super(spec, endpoint);
         this.uncheckedBase = new UncheckedBase(spec, endpoint);
     }
@@ -51,9 +53,36 @@ public final class CheckedBase<T extends BaseModel> extends Request implements C
     @Override
     public Object delete(String id) {
         return uncheckedBase
-                .read(id)
+                .delete(id)
                 .then()
                 .assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().asString();
+    }
+
+    @Override
+    public T getUserRoles(String id) {
+        return (T) uncheckedBase
+                .getUserRoles(id)
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().as(Roles.class);
+    }
+
+    @Override
+    public T addUserRole(String id, Role role) {
+        return (T) uncheckedBase
+                .addUserRole(id, role)
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().as(Role.class);
+    }
+
+    @Override
+    public Object deleteUserRole(String id, Role role) {
+        return uncheckedBase
+                .deleteUserRole(id, role)
+                .then()
+                .assertThat().statusCode(HttpStatus.SC_NO_CONTENT)
                 .extract().asString();
     }
 }
