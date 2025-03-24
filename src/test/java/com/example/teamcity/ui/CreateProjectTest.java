@@ -1,28 +1,24 @@
 package com.example.teamcity.ui;
 
-import com.example.teamcity.api.enums.Endpoint;
-import com.example.teamcity.ui.pages.LoginPage;
+import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
 import static io.qameta.allure.Allure.step;
 
 @Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest {
+    private static final String REPO_URL = "https://github.com/AlexPshe/spring-core-for-qa";
 
     @Test(description = "User should be able to create project",
-        groups = {"Positive"})
+            groups = {"Positive"})
     public void userCreatesProjectSuccessfullyTest() {
         // Подготовка окружения
-        step("Login as user");
-        superUserCheckRequests.getRequest(Endpoint.USERS).create(testData.getUser());
-        LoginPage.open().login(testData.getUser());
+        loginAs(testData.getUser());
 
         // Взаимодействие с UI
-        step("Open `Create Object Page` (http://localhost:8111/admin/createObjectMenu.html)");
-        step("Send all project parameters (repository URL)");
-        step("Click `Proceed`");
-        step("Fix Project Name and Build Type Name values");
-        step("Click `Proceed`");
+        CreateProjectPage.open("_Root")
+                .createForm(REPO_URL)
+                .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
 
         // Проверка состояния на API
         // (корректность отправки данных с UI на бэк)
