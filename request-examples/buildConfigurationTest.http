@@ -9,7 +9,7 @@
 @buildTypeId = builtType1
 ### Get all projects
 # @no-cookie-jar
-GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:29/roles
+GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/projects/name%3AProject123
 Content-Type: application/json
 Accept: application/json
 

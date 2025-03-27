@@ -29,7 +29,7 @@ public class BuildTypeTest extends BaseApiTest {
 
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("id:" + testData.getBuildType().getId());
 
         softy.assertThat(testData.getBuildType().getName()).isEqualTo(createdBuildType.getName());
     }
@@ -69,7 +69,7 @@ public class BuildTypeTest extends BaseApiTest {
 
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("id:" + testData.getBuildType().getId());
         softy.assertThat(createdBuildType)
                 .usingRecursiveComparison()
                 .ignoringFields("steps.count", "steps.step.id")

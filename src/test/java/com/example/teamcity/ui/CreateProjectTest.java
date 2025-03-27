@@ -1,5 +1,9 @@
 package com.example.teamcity.ui;
 
+import com.codeborne.selenide.Condition;
+import com.example.teamcity.api.enums.Endpoint;
+import com.example.teamcity.api.models.Project;
+import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.admin.CreateProjectPage;
 import org.testng.annotations.Test;
 
@@ -8,6 +12,7 @@ import static io.qameta.allure.Allure.step;
 @Test(groups = {"Regression"})
 public class CreateProjectTest extends BaseUiTest {
     private static final String REPO_URL = "https://github.com/AlexPshe/spring-core-for-qa";
+    private static final String ROOT_PROJECT_ID = "_Root";
 
     @Test(description = "User should be able to create project",
             groups = {"Positive"})
@@ -16,18 +21,21 @@ public class CreateProjectTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         // Взаимодействие с UI
-        CreateProjectPage.open("_Root")
+        CreateProjectPage.open(ROOT_PROJECT_ID)
                 .createForm(REPO_URL)
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
 
         // Проверка состояния на API
         // (корректность отправки данных с UI на бэк)
-        step("Check that all entities (project, build type) was successfully created with correct data on API level");
+        var createdProject = superUserCheckRequests.<Project>getRequest(Endpoint.PROJECT).read("name:" + testData.getProject().getName());
+        softy.assertThat(createdProject).isNotNull();
 
         // Проверка состояния на UI
         // (корректность считывания данных и отображение данных на UI)
-        step("Check that project is visible on Project Page (http://localhost:8111/favorite/projects)");
+        ProjectPage.open(createdProject.getId())
+                .title.shouldHave(Condition.exactText(testData.getProject().getName()));
     }
+
 
     @Test(description = "User should not be able to create project without name",
             groups = {"Negative"})
