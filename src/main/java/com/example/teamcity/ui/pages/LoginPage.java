@@ -11,8 +11,7 @@ public class LoginPage extends BasePage {
 
     private final SelenideElement inputUsername = $("#username");
     private final SelenideElement inputPassword = $("#password");
-
-    public SelenideElement inputSubmitLogin = $(".loginButton");
+    private final SelenideElement inputSubmitLogin = $(".loginButton");
 
     public static LoginPage open() {
         return Selenide.open(LOGIN_URL, LoginPage.class);

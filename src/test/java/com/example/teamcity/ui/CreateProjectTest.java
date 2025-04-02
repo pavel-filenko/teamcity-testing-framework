@@ -5,7 +5,7 @@ import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.ui.pages.ProjectPage;
 import com.example.teamcity.ui.pages.ProjectsPage;
-import com.example.teamcity.ui.pages.admin.CreateProjectPage;
+import com.example.teamcity.ui.pages.admin.CreateProjectPageFromRepository;
 import org.testng.annotations.Test;
 
 import static io.qameta.allure.Allure.step;
@@ -22,7 +22,7 @@ public class CreateProjectTest extends BaseUiTest {
         loginAs(testData.getUser());
 
         // Взаимодействие с UI
-        CreateProjectPage.open(ROOT_PROJECT_ID)
+        CreateProjectPageFromRepository.open(ROOT_PROJECT_ID)
                 .createForm(REPO_URL)
                 .setupProject(testData.getProject().getName(), testData.getBuildType().getName());
 
@@ -36,7 +36,7 @@ public class CreateProjectTest extends BaseUiTest {
         ProjectPage.open(createdProject.getId())
                 .title.shouldHave(Condition.exactText(testData.getProject().getName()));
 
-        var projectExists = ProjectsPage.open()
+        var projectExists = ProjectsPage.open() // ДОБАВИТЬ ВЕЙТЕР, БЕЗ НЕГО ПАДАЕМ
                 .getProjects()
                 .stream().anyMatch(
                         project -> project.getName().text().equals(

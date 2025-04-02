@@ -1,5 +1,6 @@
 package com.example.teamcity.ui;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.example.teamcity.BaseTest;
@@ -32,6 +33,7 @@ public class BaseUiTest extends BaseTest {
 
     protected void loginAs(User user) {
         superUserCheckRequests.getRequest(Endpoint.USERS).create(user);
-        LoginPage.open().login(user);
+        LoginPage.open().login(user)
+                .header.shouldBe(Condition.appear);
     }
 }
