@@ -24,11 +24,10 @@ public final class UncheckedBase extends Request implements CrudInterface {
 
     @Override
     public Response create(BaseModel model) {
-        var request = RestAssured
+        return RestAssured
                 .given()
                 .spec(spec)
-                .body(model);
-        return request
+                .body(model)
                 .post(endpoint.getUrl());
     }
 
@@ -42,11 +41,11 @@ public final class UncheckedBase extends Request implements CrudInterface {
 
     @Override
     public Response update(String locator, BaseModel model) {
-        var request = RestAssured
+        return RestAssured
                 .given()
                 .spec(spec)
-                .body(model);
-        return request.put(convertEndpoint(endpoint.getUrl(), locator));
+                .body(model)
+                .put(convertEndpoint(endpoint.getUrl(), locator));
     }
 
     @Override
