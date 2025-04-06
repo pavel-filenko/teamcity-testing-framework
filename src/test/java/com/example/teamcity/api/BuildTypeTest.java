@@ -1,8 +1,9 @@
 package com.example.teamcity.api;
 
-import com.example.teamcity.api.generators.RoleGenerator;
+import com.example.teamcity.api.generators.RolesGenerator;
 import com.example.teamcity.api.models.BuildType;
 import com.example.teamcity.api.models.Project;
+import com.example.teamcity.api.models.Roles;
 import com.example.teamcity.api.models.User;
 import com.example.teamcity.api.requests.base.CheckedRequests;
 import com.example.teamcity.api.requests.base.UncheckedRequests;
@@ -29,7 +30,7 @@ public class BuildTypeTest extends BaseApiTest {
 
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("id:" + testData.getBuildType().getId());
 
         softy.assertThat(testData.getBuildType().getName()).isEqualTo(createdBuildType.getName());
     }
@@ -59,17 +60,17 @@ public class BuildTypeTest extends BaseApiTest {
             groups = {"Positive", "Roles"}
     )
     public void projectAdminCreatesBuildTypeTest() {
-        var projectAdminRole = RoleGenerator.generateProjectAdmin(testData.getProject().getId());
+        var projectAdminRoles = RolesGenerator.generateProjectAdminRoles(testData.getProject().getId());
         testData.getUser().getRoles().setRole(Arrays.asList());
         var userCheckRequests = new CheckedRequests(Specifications.authSpec(testData.getUser()));
 
         var createdUserId = superUserCheckRequests.<User>getRequest(USERS).create(testData.getUser()).getId();
         superUserCheckRequests.getRequest(PROJECT).create(testData.getProject());
-        superUserCheckRequests.getRequest(USERS).addUserRole(createdUserId, projectAdminRole);
+        superUserCheckRequests.getRequest(USER_ROLES).update("id:" + createdUserId, projectAdminRoles);
 
         userCheckRequests.getRequest(BUILD_TYPES).create(testData.getBuildType());
 
-        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read(testData.getBuildType().getId());
+        var createdBuildType = userCheckRequests.<BuildType>getRequest(BUILD_TYPES).read("id:" + testData.getBuildType().getId());
         softy.assertThat(createdBuildType)
                 .usingRecursiveComparison()
                 .ignoringFields("steps.count", "steps.step.id")
@@ -81,20 +82,20 @@ public class BuildTypeTest extends BaseApiTest {
             groups = {"Negative", "Roles"}
     )
     public void projectAdminCreatesBuildTypeForAnotherProjectTest() {
-        var projectAdminRole = RoleGenerator.generateProjectAdmin(testData.getProject().getId());
+        var projectAdminRoles = RolesGenerator.generateProjectAdminRoles(testData.getProject().getId());
         testData.getUser().getRoles().setRole(Arrays.asList());
 
         var createdUserId = superUserCheckRequests.<User>getRequest(USERS).create(testData.getUser()).getId();
         superUserCheckRequests.getRequest(PROJECT).create(testData.getProject());
-        superUserCheckRequests.getRequest(USERS).addUserRole(createdUserId, projectAdminRole);
+        superUserCheckRequests.getRequest(USER_ROLES).update("id:" + createdUserId, projectAdminRoles);
 
         var testData2 = generate();
-        projectAdminRole = RoleGenerator.generateProjectAdmin(testData2.getProject().getId());
+        projectAdminRoles = RolesGenerator.generateProjectAdminRoles(testData2.getProject().getId());
         testData2.getUser().getRoles().setRole(Arrays.asList());
 
         var createdUserId2 = superUserCheckRequests.<User>getRequest(USERS).create(testData2.getUser()).getId();
         superUserCheckRequests.getRequest(PROJECT).create(testData2.getProject());
-        superUserCheckRequests.getRequest(USERS).addUserRole(createdUserId2, projectAdminRole);
+        superUserCheckRequests.getRequest(USER_ROLES).update("id:" + createdUserId2, projectAdminRoles);
 
         var userUncheckRequests = new UncheckedRequests(Specifications.authSpec(testData2.getUser()));
 
