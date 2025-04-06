@@ -22,6 +22,8 @@
         <jackson.version>2.18.2</jackson.version>
         <wiremock.version>3.9.1</wiremock.version>
         <assertj.version>3.27.3</assertj.version>
+        <selenide.version>7.4.3</selenide.version>
+        <allure.selenide.version>2.29.1</allure.selenide.version>
     </properties>
 
     <dependencies>
@@ -86,8 +88,21 @@
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide</artifactId>
+            <version>${selenide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.codeborne</groupId>
+            <artifactId>selenide-testng</artifactId>
+            <version>${selenide.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-selenide</artifactId>
+            <version>${allure.selenide.version}</version>
+        </dependency>
     </dependencies>
 
 </project>

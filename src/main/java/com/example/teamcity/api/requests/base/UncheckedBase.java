@@ -2,18 +2,24 @@ package com.example.teamcity.api.requests.base;
 
 import com.example.teamcity.api.enums.Endpoint;
 import com.example.teamcity.api.models.BaseModel;
-import com.example.teamcity.api.models.Role;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
-import com.example.teamcity.api.requests.UserRolesInterface;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public final class UncheckedBase extends Request implements CrudInterface, UserRolesInterface {
+public final class UncheckedBase extends Request implements CrudInterface {
 
     UncheckedBase(RequestSpecification spec, Endpoint endpoint) {
         super(spec, endpoint);
+    }
+
+    public String convertEndpoint(String url, String locator) {
+        if (url.contains("%s")) {
+            return url.formatted(locator);
+        } else {
+            return url + "/" + locator;
+        }
     }
 
     @Override
@@ -26,51 +32,27 @@ public final class UncheckedBase extends Request implements CrudInterface, UserR
     }
 
     @Override
-    public Response read(String id) {
+    public Response read(String locator) {
         return RestAssured
                 .given()
                 .spec(spec)
-                .get(endpoint.getUrl() + "/id:" + id);
+                .get(convertEndpoint(endpoint.getUrl(), locator));
     }
 
     @Override
-    public Response update(String id, BaseModel model) {
+    public Response update(String locator, BaseModel model) {
         return RestAssured
                 .given()
+                .spec(spec)
                 .body(model)
-                .spec(spec)
-                .put(endpoint.getUrl() + "/id:" + id);
+                .put(convertEndpoint(endpoint.getUrl(), locator));
     }
 
     @Override
-    public Response delete(String id) {
+    public Response delete(String locator) {
         return RestAssured
                 .given()
                 .spec(spec)
-                .delete(endpoint.getUrl() + "/id:" + id);
-    }
-
-    @Override
-    public Response getUserRoles(String id) {
-        return RestAssured
-                .given()
-                .spec(spec)
-                .get(endpoint.getUrl() + "id:%s/roles".formatted(id));
-    }
-
-    @Override
-    public Response addUserRole(String id, Role role) {
-        return RestAssured
-                .given()
-                .spec(spec)
-                .put(endpoint.getUrl() + "/id:%s/roles/%s/%s".formatted(id, role.getRoleId(), role.getScope()));
-    }
-
-    @Override
-    public Response deleteUserRole(String id, Role role) {
-        return RestAssured
-                .given()
-                .spec(spec)
-                .delete(endpoint.getUrl() + "id:%s/roles/%s/%s".formatted(id, role.getRoleId(), role.getScope()));
+                .delete(convertEndpoint(endpoint.getUrl(), locator));
     }
 }

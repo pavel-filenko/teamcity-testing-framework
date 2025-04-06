@@ -9,50 +9,42 @@
 @buildTypeId = builtType1
 ### Get all projects
 # @no-cookie-jar
-GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:29/roles
+GET http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/roles
 Content-Type: application/json
 Accept: application/json
 
 ### Step 1: create project
 # @no-cookie-jar
-POST http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:29/roles/PROJECT_ADMIN/p:TestSnRHtWNiNv
-Content-Type: application/json
-Accept: application/json
-
-
-### Step 2: create build type
-# @no-cookie-jar
-POST http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/buildTypes
+PUT http://{{user}}:{{password}}@{{host}}:{{port}}/app/rest/users/id:57/roles
 Content-Type: application/json
 Accept: application/json
 
 {
-  "id": "{{buildTypeId}}",
-  "name": "{{buildTypeId}}",
+  "role" : [
+    {"roleId":"PROJECT_ADMIN","scope":"p:SpringCoreForQa"}
+  ]
+}
+
+
+
+### Step 2: create build type
+# @no-cookie-jar
+POST http://test_ooosokixAm:test_qpsXHabDqK@{{host}}:{{port}}/app/rest/buildTypes
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": "test_iTJwAORrsg",
+  "name": "test_MKeYzzIPjp",
   "project": {
-    "id": "{{projectId}}"
-  },
-  "parameters": {
-    "property": [
-      {
-        "name": "myBuildParameter",
-        "value": "myValue"
-      }
-    ]
+    "id": "test_nXqWVaDuvY",
+    "name": "test_UzEkqtFnSZ"
   },
   "steps": {
     "step": [
       {
-        "name": "myCommandLineStep",
-        "type": "simpleRunner",
-        "properties": {
-          "property": [
-            {
-              "name": "script.content",
-              "value": "echo 'Hello World!'"
-            }
-          ]
-        }
+        "name": "test_QcEkOePQos",
+        "type": "simpleRunner"
       }
     ]
   }
