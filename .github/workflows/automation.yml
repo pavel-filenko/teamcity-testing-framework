@@ -47,7 +47,7 @@ jobs:
 
       # Сохранение Swagger Report в артефакты GitHub Actions
       - name: Save Swagger Coverage
-        uses: actions/upload-artifacts@v4
+        uses: actions/upload-artifact@v4
         if: ${{ inputs.package == 'api'}}
         with:
           name: swagger-coverage
