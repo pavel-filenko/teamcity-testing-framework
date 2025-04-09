@@ -106,3 +106,4 @@ public class BuildTypeTest extends BaseApiTest {
                         .checkUserDontHavePermissionsToEditProject(testData.getProject().getId()));
     }
 }
+// .swagger-coverage-commandline/bin/swagger-coverage-commandline -s teamcity.json -i target/swagger-coverage-output

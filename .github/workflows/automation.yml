@@ -37,3 +37,21 @@ jobs:
         # Указываем группу, чтобы не запустить тесты, связанные с сетапом TeamCity (у них группа Setup)
         run: ./mvnw test -Dtest='com.example.teamcity.${{ inputs.package }}.**' -Dgroups=Regression
 
+      # Создание репорта покрытия API тестов на базе TeamCity Swagger
+      # Документация: https://github.com/viclovsky/swagger-coverage
+      # Обязательно использовать фильтр SwaggerCoverageRestAssured в RestAssured для подсчета покрытия
+      - name: Run Swagger Coverage
+        continue-on-error: true
+        if: ${{ inputs.coverage == 'api'}}
+        run: .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
+
+      # Сохранение Swagger Report в артефакты GitHub Actions
+      - name: Save Swagger Coverage
+        uses: actions/upload-artifacts@v4
+        if: ${{ inputs.coverage == 'api'}}
+        with:
+          name: swagger-coverage
+          path: |
+            swagger-coverage-report.html
+            swagger-coverage-results.json
+

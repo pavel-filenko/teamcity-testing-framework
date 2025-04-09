@@ -25,6 +25,7 @@
         <assertj.version>3.27.3</assertj.version>
         <selenide.version>7.4.3</selenide.version>
         <allure.selenide.version>2.29.1</allure.selenide.version>
+        <swagger-coverage-version>1.5.0</swagger-coverage-version>
     </properties>
 
     <dependencies>
@@ -108,6 +109,11 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>${maven.compiler.plugin}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.viclovsky</groupId>
+            <artifactId>swagger-coverage-rest-assured</artifactId>
+            <version>${swagger-coverage-version}</version>
         </dependency>
     </dependencies>
 
