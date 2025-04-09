@@ -42,13 +42,13 @@ jobs:
       # Обязательно использовать фильтр SwaggerCoverageRestAssured в RestAssured для подсчета покрытия
       - name: Run Swagger Coverage
         continue-on-error: true
-        if: ${{ inputs.coverage == 'api'}}
+        if: ${{ inputs.package == 'api'}}
         run: .swagger-coverage-commandline/bin/swagger-coverage-commandline -s http://$HOST:8111/app/rest/swagger.json -i target/swagger-coverage-output
 
       # Сохранение Swagger Report в артефакты GitHub Actions
       - name: Save Swagger Coverage
         uses: actions/upload-artifacts@v4
-        if: ${{ inputs.coverage == 'api'}}
+        if: ${{ inputs.package == 'api'}}
         with:
           name: swagger-coverage
           path: |
