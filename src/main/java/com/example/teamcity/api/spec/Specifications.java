@@ -11,6 +11,7 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
+import org.checkerframework.checker.units.qual.C;
 
 import java.nio.file.Paths;
 import java.util.List;
@@ -61,7 +62,7 @@ public class Specifications {
 
     public static RequestSpecification mockSpec() {
         return reqBuilder()
-                .setBaseUri("http://localhost:8081")
+                .setBaseUri("http://%s:8081".formatted(Config.getProperty("host")))
                 .build();
     }
 }
