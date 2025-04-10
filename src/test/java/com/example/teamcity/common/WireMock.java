@@ -21,6 +21,7 @@ public final class WireMock {
     public static void setupServer(MappingBuilder mappingBuilder, int status, BaseModel model) {
         if (wireMockServer == null) {
             wireMockServer = new WireMockServer(Config.getProperty("wireMockPort"));
+            wireMockServer.url(Config.getProperty("host"));
             wireMockServer.start();
         }
 
