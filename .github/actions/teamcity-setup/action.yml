@@ -14,7 +14,6 @@ runs:
       shell: bash
       run: sudo apt-get update && sudo apt-get install -y net-tools
 
-
     - name: Set up host environment variable
       shell: bash
       # Команда для определения ip адреса для обращения из другого контейнера в документации Selenoid UI: https://aerokube.com/selenoid-ui/latest/
@@ -74,3 +73,8 @@ runs:
     - name: Set up superUserToken config.properties
       shell: bash
       run: echo "superUserToken=$SUPER_USER_TOKEN" >> src/main/resources/config.properties
+
+    - name: Output config data
+      shell: bash
+      run: |
+        cat src/main/resources/config.properties

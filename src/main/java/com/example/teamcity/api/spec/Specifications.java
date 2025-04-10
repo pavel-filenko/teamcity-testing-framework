@@ -61,7 +61,7 @@ public class Specifications {
 
     public static RequestSpecification mockSpec() {
         return reqBuilder()
-                .setBaseUri("http://%s".formatted(Config.getProperty("host").replaceAll(":\\d+", Config.getProperty("wireMockPort"))))
+                .setBaseUri("http://%s".formatted(Config.getProperty("host").replaceAll(":\\d+", ":" + Config.getProperty("wireMockPort"))))
                 .build();
     }
 }
