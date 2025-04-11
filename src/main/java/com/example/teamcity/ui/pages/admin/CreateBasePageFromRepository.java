@@ -14,6 +14,7 @@ public abstract class CreateBasePageFromRepository extends CreateBasePage {
     protected final SelenideElement submitButton = $(Selectors.byAttribute("value", "Proceed"));
     protected final SelenideElement buildTypeNameInput = $("#buildTypeName");
     protected final SelenideElement connectionSuccessfulMessage = $(".connectionSuccessful");
+    protected final SelenideElement successfullyCreatedMessage = $("main > div.successMessage ");
 
     protected void baseCreateForm(String url) {
         inputUrl.val(url);
