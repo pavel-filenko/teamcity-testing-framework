@@ -5,13 +5,9 @@ import com.example.teamcity.api.models.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.MappingBuilder;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.matching.UrlPattern;
-import io.qameta.allure.Allure;
 import lombok.SneakyThrows;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.options;
 import static com.github.tomakehurst.wiremock.common.ContentTypes.APPLICATION_JSON;
 import static com.github.tomakehurst.wiremock.common.ContentTypes.CONTENT_TYPE;
 
@@ -25,8 +21,6 @@ public final class WireMock {
     public static void setupServer(MappingBuilder mappingBuilder, int status, BaseModel model) {
         if (wireMockServer == null) {
             wireMockServer = new WireMockServer(Integer.parseInt(Config.getProperty("wireMockPort")));
-            Allure.step("%s".formatted(wireMockServer.getOptions().bindAddress()));
-            ((WireMockConfiguration) wireMockServer.getOptions()).bindAddress(Config.getProperty("host").replaceAll(":\\d+", ""));
             wireMockServer.start();
         }
 
