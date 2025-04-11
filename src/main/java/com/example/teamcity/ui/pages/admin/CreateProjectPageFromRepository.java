@@ -1,10 +1,10 @@
 package com.example.teamcity.ui.pages.admin;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.page;
 
 public class CreateProjectPageFromRepository extends CreateBasePageFromRepository {
 
@@ -25,5 +25,6 @@ public class CreateProjectPageFromRepository extends CreateBasePageFromRepositor
         projectNameInput.val(projectName);
         buildTypeNameInput.val(buildTypeName);
         submitButton.click();
+        successfullyCreatedMessage.shouldBe(Condition.visible, BASE_WAITING);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.teamcity.common;
 
+import com.example.teamcity.api.config.Config;
 import com.example.teamcity.api.models.BaseModel;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.WireMockServer;
@@ -19,7 +20,7 @@ public final class WireMock {
     @SneakyThrows
     public static void setupServer(MappingBuilder mappingBuilder, int status, BaseModel model) {
         if (wireMockServer == null) {
-            wireMockServer = new WireMockServer(8081);
+            wireMockServer = new WireMockServer(Integer.parseInt(Config.getProperty("wireMockPort")));
             wireMockServer.start();
         }
 

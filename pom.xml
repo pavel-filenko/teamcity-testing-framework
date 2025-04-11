@@ -11,19 +11,19 @@
     <properties>
         <maven.compiler.source>23</maven.compiler.source>
         <maven.compiler.target>23</maven.compiler.target>
+        <maven.compiler.plugin>3.10.1</maven.compiler.plugin>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testng.version>7.10.2</testng.version>
         <rest.assured.version>5.5.0</rest.assured.version>
         <lombok.version>1.18.36</lombok.version>
-        <allure.testng.version>2.29.1</allure.testng.version>
         <maven.surefire.plugin.version>3.5.2</maven.surefire.plugin.version>
         <allure.maven.version>2.15.2</allure.maven.version>
-        <allure.java.commons.version>2.29.1</allure.java.commons.version>
         <jackson.version>2.18.2</jackson.version>
         <wiremock.version>3.9.1</wiremock.version>
         <assertj.version>3.27.3</assertj.version>
         <selenide.version>7.4.3</selenide.version>
-        <allure.selenide.version>2.29.1</allure.selenide.version>
+        <allure.version>2.29.1</allure.version>
+        <swagger-coverage-version>1.5.0</swagger-coverage-version>
     </properties>
 
     <dependencies>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-testng</artifactId>
-            <version>${allure.testng.version}</version>
+            <version>${allure.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-java-commons</artifactId>
-            <version>${allure.java.commons.version}</version>
+            <version>${allure.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -101,8 +101,44 @@
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-selenide</artifactId>
-            <version>${allure.selenide.version}</version>
+            <version>${allure.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>${maven.compiler.plugin}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.viclovsky</groupId>
+            <artifactId>swagger-coverage-rest-assured</artifactId>
+            <version>${swagger-coverage-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-rest-assured</artifactId>
+            <version>${allure.version}</version>
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin}</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
 </project>
+
