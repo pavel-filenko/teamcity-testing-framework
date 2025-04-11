@@ -14,6 +14,5 @@ import java.util.List;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Steps extends BaseModel {
-//    private Integer count;
     private List<Step> step;
 }

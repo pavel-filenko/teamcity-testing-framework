@@ -22,8 +22,6 @@ public class Specifications {
 
     private static RequestSpecBuilder reqBuilder() {
         RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
-//        reqBuilder.addFilter(new RequestLoggingFilter());
-//        reqBuilder.addFilter(new ResponseLoggingFilter());
         reqBuilder.addFilter(new SwaggerCoverageRestAssured(
                 new FileSystemOutputWriter(
                         Paths.get("target/" + OUTPUT_DIRECTORY)

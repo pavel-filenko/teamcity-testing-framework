@@ -36,7 +36,7 @@ public class CreateProjectTest extends BaseUiTest {
         ProjectPage.open(createdProject.getId())
                 .title.shouldHave(Condition.exactText(testData.getProject().getName()));
 
-        var projectExists = ProjectsPage.open() // ДОБАВИТЬ ВЕЙТЕР, БЕЗ НЕГО ПАДАЕМ
+        var projectExists = ProjectsPage.open()
                 .getProjects()
                 .stream().anyMatch(
                         project -> project.getName().text().equals(
